@@ -1,7 +1,7 @@
 "use client";
 import { Id, Task } from "@/types";
 import React, { useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { TrashIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { useSortable } from "@dnd-kit/sortable";
@@ -82,7 +82,7 @@ export const TaskCard = ({ task, deleteTask, updateTask }: Props) => {
         {...attributes}
         {...listeners}
         key={task.id}
-        className="w-full rounded-xl bg-primary text-background py-4 flex justify-between p-2 pl-4 pr-4 items-center"
+        className="w-full rounded-xl bg-task text-foreground/80 py-4 flex justify-between p-2 pl-4 pr-4 items-center"
       >
         <Textarea
           className="h-[90%] w-full text-foreground"
@@ -110,7 +110,7 @@ export const TaskCard = ({ task, deleteTask, updateTask }: Props) => {
       {...listeners}
       onClick={toggleEditMode}
       key={task.id}
-      className="w-full rounded-xl bg-primary text-background py-4 flex justify-between p-2 pl-4 items-center"
+      className="w-full rounded-xl bg-task text-foreground/80 py-4 flex justify-between p-2 pl-4 items-center"
       onMouseEnter={() => {
         setMouseIsOver(true);
       }}
