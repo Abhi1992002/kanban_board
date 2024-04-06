@@ -16,7 +16,14 @@ export const ColumnGroup = ({
   setColumns: React.Dispatch<React.SetStateAction<Column[]>>;
   deleteColumn: (id: string | number) => void;
   updateColumn: (id: Id, title: string) => void;
-  createTask: (columnId: Id) => void;
+  createTask: (
+    columnId: Id,
+    content: string | undefined,
+    tag_color: string | undefined,
+    tag_name: string | undefined,
+    date: Date | undefined,
+    title: string | undefined
+  ) => void;
   deleteTask: (id: Id) => void;
   updateTask: (id: Id, content: string) => void;
   tasks: Task[];

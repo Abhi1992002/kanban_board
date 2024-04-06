@@ -58,21 +58,26 @@
     @apply bg-background text-foreground;
   }
 }
-
+body {
+  overflow: hidden;
+}
 /* For WebKit browsers (e.g., Chrome, Safari) */
 .scroller::-webkit-scrollbar {
-  width: 4px; /* Width of the scrollbar */
+  width: 0px; /* Width of the scrollbar */
 }
 
 .scroller::-webkit-scrollbar-track {
   background: transparent; /* Background color of the scrollbar track */
+  width: 0px;
 }
 
 .scroller::-webkit-scrollbar-thumb {
-  background: #888; /* Color of the scrollbar thumb */
+  background: transparent; /* Color of the scrollbar thumb */
   border-radius: 6px; /* Rounded corners of the scrollbar thumb */
+  width: 0px;
 }
 
 .scroller::-webkit-scrollbar-thumb:hover {
   background: #555; /* Color of the scrollbar thumb on hover */
+  width: 0px;
 }

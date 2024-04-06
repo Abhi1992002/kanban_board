@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../../ui/button";
 import { PlusCircle } from "lucide-react";
 import { Column, Id, Task } from "@/types";
@@ -14,7 +14,6 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { createPortal } from "react-dom";
 import { TaskCard } from "./task-card";
 import { ColumnGroup } from "./column-group";
 import { SingleColumn } from "./single-column";
@@ -22,7 +21,23 @@ import { SingleColumn } from "./single-column";
 type Props = {};
 
 export const KanbanBoard = (props: Props) => {
-  const [columns, setColumns] = useState<Column[]>([]);
+  const [columns, setColumns] = useState<Column[]>([
+    {
+      id: "1",
+      title: `Todo`,
+      column_color: "bg-red-500",
+    },
+    {
+      id: "2",
+      title: `Doing`,
+      column_color: "bg-yellow-500",
+    },
+    {
+      id: "3",
+      title: `Done`,
+      column_color: "bg-green-500",
+    },
+  ]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -37,6 +52,7 @@ export const KanbanBoard = (props: Props) => {
     const new_column_to_add = {
       id: generateId(),
       title: `Column ${columns.length + 1}`,
+      column_color: "bg-red-500",
     };
     setColumns([...columns, new_column_to_add]);
   };
@@ -56,13 +72,24 @@ export const KanbanBoard = (props: Props) => {
   };
 
   // ------------------------------------------------ Task CRUD Operation ------------------------------------------------
-  const createTask = (columnId: Id) => {
+  const createTask = (
+    columnId: Id,
+    content: string | undefined,
+    tag_color: string | undefined,
+    tag_name: string | undefined,
+    date: Date | undefined,
+    title: string | undefined
+  ) => {
     setTasks((tasks) => [
       ...tasks,
       {
         id: generateId(),
         columnId: columnId,
-        content: "Write Content here....",
+        content: content,
+        tag_color: tag_color,
+        tag_name: tag_name,
+        date: date,
+        title: title,
       },
     ]);
   };
@@ -176,7 +203,8 @@ export const KanbanBoard = (props: Props) => {
       onDragOver={ondragover}
       sensors={sensors}
     >
-      <div className="p-4  h-[calc(100%-56px)] w-[100vw] md:w-[calc(100vw-220px)] gap-4 lg:w-[calc(100vw-280px)] flex  overflow-x-auto overflow-y-hidden">
+      <div className="p-4 relative  h-[calc(100%-56px)] w-[100vw] md:w-[calc(100vw-220px)] gap-4 lg:w-[calc(100vw-280px)] flex  overflow-x-auto overflow-y-hidden scroller">
+        <div className="fixed right-0 bg-gradient-to-l from-background to-transparent w-[100px] h-[100%]"></div>
         <ColumnGroup
           updateTask={updateTask}
           deleteTask={deleteTask}
@@ -187,7 +215,7 @@ export const KanbanBoard = (props: Props) => {
           setColumns={setColumns}
           deleteColumn={deleteColumn}
         />
-        <Button className="flex w-fit " onClick={() => createNewColumn()}>
+        <Button className="flex w-fit z-10" onClick={() => createNewColumn()}>
           <PlusCircle className="h-4 w-4" />
         </Button>
       </div>

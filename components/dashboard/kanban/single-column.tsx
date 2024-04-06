@@ -2,10 +2,17 @@ import { Column, Id, Task } from "@/types";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { useMemo, useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
-import { Badge, EllipsisVertical, PlusCircle, Trash2 } from "lucide-react";
+import {
+  Badge,
+  EllipsisVertical,
+  Plus,
+  PlusCircle,
+  Trash2,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { TaskCard } from "./task-card";
+import { CreateTaskDialog } from "@/components/small-ui/create-task";
 
 export const SingleColumn = ({
   column,
@@ -19,7 +26,14 @@ export const SingleColumn = ({
   column: Column;
   deleteColumn: (id: string | number) => void;
   updateColumn: (id: Id, title: string) => void;
-  createTask: (columnId: Id) => void;
+  createTask: (
+    columnId: Id,
+    content: string | undefined,
+    tag_color: string | undefined,
+    tag_name: string | undefined,
+    date: Date | undefined,
+    title: string | undefined
+  ) => void;
   deleteTask: (id: Id) => void;
   updateTask: (id: Id, content: string) => void;
   tasks: Task[];
@@ -62,7 +76,7 @@ export const SingleColumn = ({
         ref={setNodeRef}
         style={style}
         key={column.id}
-        className="min-w-[300px] opacity-60 bg-background px-3 pt-3 text-center h-full border rounded-lg border-foreground/30"
+        className="max-w-[340px] w-[33vw] opacity-60 bg-background px-3 pt-3 text-center h-full border rounded-lg border-foreground/30"
       ></div>
     );
   }
@@ -72,7 +86,7 @@ export const SingleColumn = ({
       ref={setNodeRef}
       style={style}
       key={column.id}
-      className="min-w-[300px] w-[33vw] max-h-[calc(100vh-94px)] overflow-hidden flex gap-2 flex-col bg-background  pt-3 text-center h-full"
+      className="max-w-[340px] w-[33vw] max-h-[calc(100vh-94px)] overflow-hidden flex gap-2 flex-col bg-background  pt-3 text-center h-full"
     >
       {/* header */}
       <div
@@ -80,10 +94,12 @@ export const SingleColumn = ({
         {...attributes}
         {...listeners}
         onClick={() => setEditmode(true)}
-        className="flex px-3 h-[50px] items-center"
+        className="flex px-3 h-[50px] items-center relative"
       >
         {/* number of todos */}
-        <Badge className="rounded-full w-2 h-2 p-1 flex bg-green-500 items-center justify-center bg-foreground mr-2"></Badge>
+        <Badge
+          className={`rounded-full w-2 h-2 p-1 flex items-center justify-center mr-2 ${column.column_color}`}
+        ></Badge>
         {/* title */}
         {editmode ? (
           <Input
@@ -108,8 +124,11 @@ export const SingleColumn = ({
         <EllipsisVertical className="w-4 h-4 " />
       </div>
 
+      {/* Create Task */}
+      <CreateTaskDialog createTask={createTask} columnId={column.id} />
+
       {/*  content */}
-      <div className="px-3 scroller w-full h-[calc(100%-110px)] flex  flex-col gap-2 text-sm relative overflow-y-auto">
+      <div className="scroller w-full h-[calc(100%-110px)] flex  flex-col gap-2 text-sm overflow-y-auto">
         <SortableContext items={taskIds}>
           {tasks.map((task) => {
             if (task.columnId === column.id) {
@@ -123,19 +142,7 @@ export const SingleColumn = ({
             }
           })}
         </SortableContext>
-      </div>
-
-      {/* footer */}
-      <div className="px-4 gap-2 h-[60px] w-full bg-secondary flex items-center">
-        {/* Create Task */}
-        <Button
-          size={"sm"}
-          className="text-sm"
-          onClick={() => createTask(column.id)}
-        >
-          <PlusCircle className="w-4 h-4 mr-2" />
-          Create Task
-        </Button>
+        <div className="w-full h-[60px] bg-gradient-to-t from-background to-transparent fixed bottom-0"></div>
       </div>
     </div>
   );
